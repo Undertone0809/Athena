@@ -1,5 +1,25 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Callable
 from pydantic import BaseModel, Field
+
+
+class Operator:
+    def __init__(self, name: str, description: str, callback: Callable):
+        self.name = name
+        self.description = description
+        self.callback = callback
+
+    def execute_action(self, *args, **kwargs):
+        self.callback(*args, **kwargs)
+
+
+class Sensor:
+    def __init__(self, name: str, description: str, callback: Callable):
+        self.name = name
+        self.description = description
+        self.callback = callback
+
+    def get_data(self, *args, **kwargs):
+        self.callback(*args, **kwargs)
 
 
 class Task(BaseModel):

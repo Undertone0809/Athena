@@ -49,7 +49,9 @@ Robot具有以下能力，这些能力都是你可以合理运用的能力。
 ## Your Task
 - 你需要按照顺序执行每个步骤
 - 如果task queue中所有的任务都已经执行完成，请输出stop相关的指令
+"""
 
+OUTPUT_FORMAT = """
 ## Output format
 The output should be formatted as a JSON instance that conforms to the JSON schema below.
 
@@ -111,7 +113,10 @@ Robot具有以下能力，这些能力都是你可以合理运用的能力。
 ## Attention
 - Let's take a deep breathe and think it step by step.
 - 你的任务规划设计的能力范畴不能超出Robot的能力范畴
+- The end of task must be stop.
+"""
 
+OUTPUT_FORMAT = """
 ## Output format
 The output should be formatted as a JSON instance that conforms to the JSON schema below.
 
@@ -123,5 +128,3 @@ Here is the output schema:
 {"properties": {"tasks": {"description": "task sequences", "type": "array", "items": {"$ref": "#/definitions/Task"}}}, "required": ["tasks"], "definitions": {"Task": {"title": "Task", "type": "object", "properties": {"id": {"title": "Id", "description": "Autoincrement task id", "type": "integer"}, "name": {"title": "Name", "description": "task name", "type": "string"}, "parameters": {"title": "Parameters", "description": "task parameters", "type": "object"}, "reason": {"title": "Reason", "description": "Reason for task execution", "type": "string"}}, "required": ["id", "name", "parameters", "reason"]}}}
 ```
 """
-
-GENERATE_PLAN_SYSTEM_PROMPT_TEMPLATE = StringTemplate(GENERATE_PLAN_SYSTEM_PROMPT)
