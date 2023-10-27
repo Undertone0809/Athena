@@ -26,6 +26,7 @@ class RobotController:
 
     def execute_action(self, action_name: str, *args, **kwargs) -> None:
         operator = self.get_operator(action_name)
+        print_text(f"[command] run {action_name} {str(args)} {str(kwargs)}", "green")
         operator.execute_action(*args, **kwargs)
 
     def get_operator(self, action_name: str) -> Operator:
@@ -96,6 +97,7 @@ class RobotAgent(BaseAgent):
             try:
                 task: Task = formatter.formatting_result(llm_output.content).task
 
+                print_text(f"[task] current task: {task.dict()}", "blue")
                 if task.name == "stop":
                     self.robot_controller.execute_action("stop")
                     return
