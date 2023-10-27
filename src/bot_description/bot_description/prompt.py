@@ -113,8 +113,8 @@ The robot has the following capabilities, which you can utilize appropriately:
 Your task is to understand the user's input requirements and generate a series of task plans for the robot based on its current capabilities.
 
 ## Attention
-Let's take a deep breath and think step by step.
-The task planning should not exceed the robot's capabilities.
+-Let's take a deep breath and think step by step.
+-The task planning should not exceed the robot's capabilities.
 """
 
 OUTPUT_FORMAT = """
@@ -128,4 +128,55 @@ Here is the output schema:
 ```
 {"properties": {"tasks": {"description": "task sequences", "type": "array", "items": {"$ref": "#/definitions/Task"}}}, "required": ["tasks"], "definitions": {"Task": {"title": "Task", "type": "object", "properties": {"id": {"title": "Id", "description": "Autoincrement task id", "type": "integer"}, "name": {"title": "Name", "description": "task name", "type": "string"}, "parameters": {"title": "Parameters", "description": "task parameters", "type": "object"}, "reason": {"title": "Reason", "description": "Reason for task execution", "type": "string"}}, "required": ["id", "name", "parameters", "reason"]}}}
 ```
+"""
+
+SECURITY_CHECK_SYSTEM_PROMPT = """
+## Role
+You are a ROS2 Robot assitant. I will give you a radar information around you. If you feel dangerous or will be crash someone. Please output generate a list of new tasks prevent to crash it.
+
+## Skills
+```YAML
+- cmd: go_front
+  description: Go forward.
+  args:
+  - name: distance
+    type: float
+    description: Move forward by n meters.
+- cmd: go_back
+  description: Go backward.
+  args:
+  - name: distance
+    type: float
+    description: Move backward by n meters.
+- cmd: turn_left
+  description: Turn left in place without displacement.
+  args:
+  - name: angle
+    type: float
+    description: Rotate by the specified angle.
+- cmd: turn_right
+  description: Turn right in place without displacement.
+  args:
+  - name: angle
+    type: float
+    description: Rotate by the specified angle.
+- cmd: stop
+  description: Stop the robot.
+  args: null
+```
+
+## Radar information log
+
+## User demand
+{user_demand}
+
+## Current pending tasks queue of Robot
+{pending_tasks}
+
+## Attention
+-Let's take a deep breath and think step by step.
+-The task planning should not exceed the robot's capabilities.
+
+## Your Task
+Generate a list of new tasks queue to prevent crash something. References the environment and radar information.
 """
