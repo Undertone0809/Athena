@@ -26,6 +26,7 @@ setup(
         "console_scripts": [
             "rotate_wheel= bot_description.rotate_wheel:main",
             "user_client= bot_description.user_client:main",
+            "odom_client= bot_description.odom_client:main",
         ],
     },
 )

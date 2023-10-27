@@ -1,6 +1,6 @@
-from typing import List, Callable
+from typing import List
+from collections import deque
 
-from pydantic import Field, BaseModel
 from promptulate.llms import ChatOpenAI, BaseLLM
 from promptulate.agents import BaseAgent
 from promptulate.output_formatter import OutputFormatter
@@ -24,7 +24,11 @@ class RobotController:
     def __init__(self, operators: List[Operator]) -> None:
         self.operators: List[Operator] = operators
 
+        if self.get_operator("stop") is None:
+            raise ValueError("Please provide stop operator")
+
     def execute_action(self, action_name: str, *args, **kwargs) -> None:
+        """Execute action by action_name."""
         operator = self.get_operator(action_name)
         print_text(f"[command] run {action_name} {str(args)} {str(kwargs)}", "green")
         operator.execute_action(*args, **kwargs)
@@ -60,8 +64,8 @@ class RobotAgent(BaseAgent):
         self.robot_controller: RobotController = controller
         self.robot_observer: RobotObserver = observer
         self.user_demand: str = ""
-        self.pending_tasks: List[Task] = []
-        self.completed_tasks: List[Task] = []
+        self.pending_tasks: deque = deque()
+        self.completed_tasks: deque = deque()
 
     def get_llm(self) -> BaseLLM:
         return self.llm
@@ -75,8 +79,8 @@ class RobotAgent(BaseAgent):
 
         # build system prompt
         system_prompt: str = SYSTEM_PROMPT_TEMPLATE.format(
-            user_input=self.user_demand,
-            task_queue=f"{str(self.pending_tasks)}",
+            user_demand=self.user_demand,
+            pending_tasks=f"{str(self.pending_tasks)}",
         )
         formatter = OutputFormatter(CommandResponse)
         instruction = formatter.get_formatted_instructions()
@@ -88,27 +92,37 @@ class RobotAgent(BaseAgent):
             ]
         )
 
+        counter = 0
         while True:
-            # get current task
-            # TODO add retry if failed
+            self.robot_controller.execute_action("stop")
+
             llm_output: BaseMessage = self.llm.predict(messages)
             messages.add_message(llm_output)
+            messages.add_user_message("next")
 
             try:
+                # get current task
+                # TODO add retry if failed
                 task: Task = formatter.formatting_result(llm_output.content).task
-
                 print_text(f"[task] current task: {task.dict()}", "blue")
-                if task.name == "stop":
+
+                if task.name == "stop" or not self.pending_tasks:
                     self.robot_controller.execute_action("stop")
                     return
 
                 # run task
+                task = self.pending_tasks.popleft()
+                self.completed_tasks.append(task)
                 self.robot_controller.execute_action(
                     action_name=task.name, **task.parameters
                 )
+
             except Exception as e:
+                print_text(f"[error] {e}", "red")
                 self.robot_controller.execute_action("stop")
                 return
+
+            counter += 1
 
     def generate_tasks(self):
         """Generate tasks based on user demand."""
@@ -125,13 +139,13 @@ class RobotAgent(BaseAgent):
         llm_output: str = self.llm.predict(messages).content
 
         response: GeneratePlanResponse = formatter.formatting_result(llm_output)
-        self.pending_tasks = response.tasks
+        self.pending_tasks = deque(response.tasks)
         print_text(f"Generate plans: {self.pending_tasks}", "green")
 
 
-def main():
+def example():
     operators = []
     sensors = []
     controller = RobotController(operators)
     observer = RobotObserver(sensors)
-    robot_agent = RobotAgent(controller=controller, observer=observer)
+    RobotAgent(controller=controller, observer=observer)

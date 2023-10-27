@@ -1,4 +1,4 @@
-from typing import Dict, Any, List, Callable
+from typing import Dict, Any, List, Callable, Optional
 from pydantic import BaseModel, Field
 
 
@@ -25,7 +25,7 @@ class Sensor:
 class Task(BaseModel):
     id: int = Field(description="Autoincrement task id")
     name: str = Field(description="task name")
-    parameters: Dict[str, Any] = Field(description="task parameters")
+    parameters: Optional[Dict[str, Any]] = Field(description="task parameters")
     reason: str = Field(description="Reason for task execution")
 
 

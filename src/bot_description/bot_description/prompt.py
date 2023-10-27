@@ -44,10 +44,10 @@ The robot has the following capabilities, which you can utilize:
 Environment information is not provided.
 
 ## User Demand
-Go ahead and see what's happening, then come back.
+{user_demand}
 
 ## Pending Control Task Queue
-{"tasks":[{"name":"go_front","parameters":{"distance":5},"reason":"Check what's happening ahead"},{"name":"go_back","parameters":{"distance":5},"reason":"Return to the starting point"}]}
+{pending_tasks}
 
 ## Your Task
 - You need to execute each step in the given order.
