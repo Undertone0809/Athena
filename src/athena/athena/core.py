@@ -7,11 +7,11 @@ from promptulate.output_formatter import OutputFormatter
 from promptulate.schema import MessageSet, SystemMessage, UserMessage, BaseMessage
 from promptulate.utils.color_print import print_text
 
-from bot_description.prompt import (
+from athena.prompt import (
     SYSTEM_PROMPT_TEMPLATE,
     GENERATE_PLAN_SYSTEM_PROMPT,
 )
-from bot_description.schema import (
+from athena.schema import (
     Task,
     GeneratePlanResponse,
     CommandResponse,

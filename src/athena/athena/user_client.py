@@ -9,13 +9,12 @@ from typing import List
 
 from promptulate.utils.color_print import print_text
 
-from bot_description.core import (
+from athena.core import (
     RobotAgent,
     RobotController,
     RobotObserver,
 )
-from bot_description.schema import Operator
-
+from athena.schema import Operator
 
 def get_operators(node: Node):
     """Get all operators of the robot"""

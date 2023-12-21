@@ -2,7 +2,7 @@ from setuptools import setup
 from glob import glob
 import os
 
-package_name = "bot_description"
+package_name = "athena"
 
 setup(
     name=package_name,
@@ -15,18 +15,18 @@ setup(
         (os.path.join("share", package_name, "urdf"), glob("urdf/**")),
         (os.path.join("share", package_name, "world"), glob("world/**")),
     ],
-    install_requires=["setuptools", "promptulate"],
+    install_requires=["setuptools", "promptulate~=1.10.0"],
     zip_safe=True,
-    maintainer="zeeland",
-    maintainer_email="zeeland@foxmail.com",
-    description="TODO: Package description",
-    license="TODO: License declaration",
+    maintainer="Zeeland",
+    maintainer_email="zeeland4work@gmail.com",
+    description="A Mulitmodal Robot Agent based on ROS2.",
+    license="MIT",
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "rotate_wheel= bot_description.rotate_wheel:main",
-            "user_client= bot_description.user_client:main",
-            "odom_client= bot_description.odom_client:main",
+            "rotate_wheel= athena.rotate_wheel:main",
+            "user_client= athena.user_client:main",
+            "odom_client= athena.odom_client:main",
         ],
     },
 )

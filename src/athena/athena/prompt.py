@@ -132,7 +132,7 @@ Here is the output schema:
 
 SECURITY_CHECK_SYSTEM_PROMPT = """
 ## Role
-You are a ROS2 Robot assitant. I will give you a radar information around you. If you feel dangerous or will be crash someone. Please output generate a list of new tasks prevent to crash it.
+You are a ROS2 Robot assistant. I will give you a radar and other information summary around you. If you feel dangerous or will be crash someone. Please output generate a list of new tasks prevent to crash it.
 
 ## Skills
 ```YAML
